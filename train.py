@@ -1,31 +1,50 @@
-from tensorflow.keras.layers import Activation, Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization, GlobalAveragePooling2D # type: ignore
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization # type: ignore
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc # type: ignore
 from tensorflow.keras.preprocessing.image import ImageDataGenerator # type: ignore
+from tensorflow.keras.callbacks import ReduceLROnPlateau # type: ignore
+from tensorflow.keras.callbacks import EarlyStopping # type: ignore
 from tensorflow.keras.preprocessing import image # type: ignore
 from tensorflow.keras.models import Sequential # type: ignore
+from tensorflow.keras.regularizers import l2 # type: ignore
 from tensorflow.keras.layers import Dense # type: ignore
 import tensorflow as tf # type: ignore
 import matplotlib.pyplot as plt
 from modules.sysprop import *
 import seaborn as sns # type: ignore
 import numpy as np
+import yaml
 
+def loadConfig(config_file='scripts/venv/repo/config.yaml', label='ProjectPath'):
+    if not os.path.exists(config_file):
+        print(f"El archivo {config_file} no existe.")
+        return None
+    try:
+        with open(config_file, 'r') as file:
+            config_data = yaml.safe_load(file)
 
-from tensorflow.keras.regularizers import l2 # type: ignore
-from tensorflow.keras.callbacks import ReduceLROnPlateau # type: ignore
-from tensorflow.keras.callbacks import EarlyStopping # type: ignore
-
+        if label in config_data:
+            project_path = config_data[label]
+            return project_path
+        else:
+            return None
+    except yaml.YAMLError as e:
+        return None
+    
 class Trainer(object):
-    epochs = 200
+    epochs = 2
     batch_size= 16
-    dataset = 'dataset_mod'
     optimizers = {'rmsprop': tf.keras.optimizers.RMSprop(),
                   'adam': tf.keras.optimizers.Adam(), 
                   'sgd': tf.keras.optimizers.SGD()} 
     
-    def __init__(self):
+    def __init__(self, project_path):
         self.early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
         self.reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5, min_lr=1e-4)
+        self.model_path = os.path.join(project_path, "model.keras")
+        self.dataset = os.path.join(project_path, "dataset_mod")
+
+        print ("pat_1",self.model_path)
+        print("pat_2", self.dataset)
         self.optimizer = self.optimizers['adam']
         self.model = Sequential()
         self.layers()
@@ -54,6 +73,8 @@ class Trainer(object):
 
     def __weight_calc__(self, path):
         folder_counts = {}
+
+        print('Path in', path)
 
         for index, folder_name in enumerate(os.listdir(path)):
             folder_path = os.path.join(path, folder_name)
@@ -121,25 +142,12 @@ class Trainer(object):
             class_weight=self.weights,
             epochs=self.epochs
         )
-
-        self.model.save('modelo_custom.keras')
-    
-    def test_model(self, img_path):
-        img = image.load_img(img_path, target_size=(224, 224))
-        img_array = image.img_to_array(img) / 255.0
-        img_array = np.expand_dims(img_array, axis=0)
-
-        predictions = self.model.predict(img_array)
-        predicted_class = np.argmax(predictions)
-        class_label = self.class_labels[predicted_class]
-
-        print('labels',self.class_labels)
         
-        print(f"La imagen pertenece a la clase '{class_label}' con una probabilidad de {np.max(predictions) * 100:.2f}%")
+        self.model.save(self.model_path)
     
     def model_eval(self):
         _, val_acc = self.model.evaluate(self.validation_generator)
-        print(f"Exactitud en validación: {val_acc * 100:.2f}%")
+        print(f"Accuracy in validation: {val_acc * 100:.2f}%")
     
     def model_report(self):
         predictions = self.model.predict(self.validation_generator)
@@ -159,9 +167,9 @@ class Trainer(object):
 
         plt.figure(figsize=(8, 6))
         sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=class_names, yticklabels=class_names)
-        plt.title('Matriz de Confusión')
-        plt.ylabel('Clase Verdadera')
-        plt.xlabel('Clase Predicha')
+        plt.title('Confusion matrix')
+        plt.ylabel('True class')
+        plt.xlabel('Class Predicted')
         plt.show()
 
     def roc_curve(self):
@@ -173,26 +181,29 @@ class Trainer(object):
 
         plt.figure(figsize=(10, 8))
         for i in range(len(self.class_labels)):
-            plt.plot(fpr[i], tpr[i], label=f'Clase {self.class_labels[i]} (AUC = {roc_auc[i]:.2f})')
+            plt.plot(fpr[i], tpr[i], label=f'Class {self.class_labels[i]} (AUC = {roc_auc[i]:.2f})')
         plt.plot([0, 1], [0, 1], 'k--', lw=2)
         plt.xlim([0.0, 1.0])
         plt.ylim([0.0, 1.05])
-        plt.xlabel('Tasa de Falsos Positivos (False Positive Rate)')
-        plt.ylabel('Tasa de Verdaderos Positivos (True Positive Rate)')
-        plt.title('Curvas ROC por clase')
+        plt.xlabel('False Positive Rate (False Positive Rate)')
+        plt.ylabel('True Positive Rate (TRP)')
+        plt.title('ROC curves by class')
         plt.legend(loc='lower right')
         plt.show()
     
 
 if __name__ == '__main__':
-    model = Trainer()
-    model.compile()
-    model.train()
+    path = loadConfig()
 
-    model.model_eval()
-    model.model_report()
+    if (path != None):
+        model = Trainer(path)
+        model.compile()
+        model.train()
 
-    model.confusion_matrix()
-    model.roc_curve()
+        model.model_eval()
+        model.model_report()
 
-    model.test_model('dataset/fruta_verde/1_V.jpg')
+        model.confusion_matrix()
+        model.roc_curve()
+
+        print("Training completed")

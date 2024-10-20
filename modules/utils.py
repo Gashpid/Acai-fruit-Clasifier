@@ -1,12 +1,36 @@
 import matplotlib.pyplot as plt
 from collections import Counter
+from plotter import HTMLPlotter
 from bgremove import BGRemove
 import numpy as np
+import yaml
 import cv2
+import os
+
+def loadConfig(config_file='scripts/venv/repo/config.yaml', label1='ProjectPath', label2 ="UtilsFucntion", label3="CurrentImage"):
+    if not os.path.exists(config_file):
+        return None,None,None,None
+    try:
+        with open(config_file, 'r') as file:
+            config_data = yaml.safe_load(file)
+
+        if label1 in config_data and label2 in config_data and label3 in config_data:
+            current_image = config_data[label3]
+            project_path = config_data[label1]
+            utils_fucnt = config_data[label2]
+            try:
+                winMode = config_data["WindowMode"]
+            except: winMode = None
+            return project_path,utils_fucnt,current_image,winMode
+        else:
+            return None,None,None,None
+    except yaml.YAMLError as e:
+        return None,None,None,None
 
 class Utils(object):
     def __init__(self):
         self.__bgremove = BGRemove()
+        self.path = ""
 
     def __get_dominant_colors__(self, image, num_colors=5, exclude_threshold=None):
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -26,7 +50,8 @@ class Utils(object):
         color_array = np.array([color for color, _ in dominant_colors], dtype=np.uint8)
         return color_array
 
-    def Tones(self, image_path, exclude_threshold=100, plot=False, verbose=False):
+    def Tones(self, image_path, winMode, exclude_threshold=100, plot=False, verbose=False):
+        print("Extracting tones of the image...")
         image = cv2.imread(image_path)
 
         image_wo_bg = self.__bgremove.remove(image)
@@ -41,26 +66,47 @@ class Utils(object):
             for i, color in enumerate(color_array):
                 heatmap[i, :, :] = color
 
-            plt.figure(figsize=(12, 6))
+            dpi = 72
+            fig_height = 6
+            fig_width = 12
+            max_subplot_width = 5 / dpi
 
-            plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            plt.title('Original Image & Tones')
-            plt.axis('off')
+            fig, axs = plt.subplots(1, 2, figsize=(fig_width, fig_height), gridspec_kw={'width_ratios': [1, max_subplot_width]})
+            plt.subplots_adjust(wspace=0)
 
-            y_labels = [len(color_array)-(i+1) for i in range(len(color_array))]
+            axs[0].imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+            axs[0].set_title('Original Image & Tones')
+            axs[0].axis('off')
 
-            cbar_ax = plt.gca().inset_axes([1.05, 0, 0.05, 1])
-            cbar_ax.set_yticks(np.arange(len(color_array)))
-            cbar_ax.imshow(heatmap, aspect='auto')
-            cbar_ax.set_yticklabels(y_labels)
-            cbar_ax.set_xticks([])
+            color_subplot = np.zeros((len(color_array), 10, 3), dtype=np.uint8)
+            for i, color in enumerate(color_array):
+                color_subplot[i, :, :] = color
+
+            axs[1].imshow(color_subplot, aspect='auto')
+            axs[1].set_title('Dominant Colors')
+            axs[1].set_xticks([])
+            axs[1].set_yticks([])
+
+            for i in range(len(color_array)):
+                axs[1].text(5, i, f'Color {i + 1}', ha='center', va='center', fontsize=12, color='w')
 
             plt.tight_layout()
-            plt.show()
+            file_name = os.path.join(self.path, "output\\tones.html")
+            full_path = os.path.dirname(file_name)
+            os.makedirs(full_path, exist_ok=True)
+            HTMLPlotter(fig, file_name)
+
+            print("Finished successful...")
+
+            if winMode: plt.close()
+            else: plt.show()
 
         return color_array
 
-    def colorIntensities(self, image_path, exclude_above=100, plot=False):
+    def colorIntensities(self, image_path, winMode, exclude_above=100, plot=False):
+
+        print("Computing color intensities of the image...")
+
         image = cv2.imread(image_path)
 
         image_wo_bg = self.__bgremove.remove(image)
@@ -76,7 +122,7 @@ class Utils(object):
         intensities, bins = np.histogram(filtered_image.flatten(), bins=256, range=[0, 256])
 
         if plot:
-            plt.figure(figsize=(12, 6))
+            fig = plt.figure(figsize=(12, 6))
 
             plt.subplot(1, 2, 1)
             plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
@@ -92,11 +138,20 @@ class Utils(object):
             plt.ticklabel_format(axis='y', style='scientific', scilimits=(0, 0))
 
             plt.tight_layout()
-            plt.show()
+            file_name = os.path.join(self.path, "output\intensities.html")
+            full_path = os.path.dirname(file_name)
+            os.makedirs(full_path, exist_ok=True)
+            HTMLPlotter(fig, file_name)
+
+            print("Finished successful...")
+
+            if winMode: plt.close()
+            else: plt.show()
         
         return intensities, bins
     
-    def diameter(self, img_path, plot=False):
+    def diameter(self, img_path, winMode, plot=False):
+        print("Computing diameter of the fruit...")
         image = cv2.imread(img_path)
 
         gris = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -118,7 +173,7 @@ class Utils(object):
             cv2.circle(imagen_con_circulo, centro, radio, (0, 255, 0), 2)
 
         if plot:
-            _, axes = plt.subplots(1, 4, figsize=(16, 8))
+            fig, axes = plt.subplots(1, 4, figsize=(16, 8))
 
             axes[0].imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
             axes[0].set_title("Original image")
@@ -138,11 +193,22 @@ class Utils(object):
             axes[3].text(0, 1, 'Diameter [px]: '+str(diameter), fontsize=12, color='k', ha='left', va='top', transform=axes[3].transAxes)
 
             plt.tight_layout()
-            plt.show()
+            file_name = os.path.join(self.path, "output\diameter.html")
+            full_path = os.path.dirname(file_name)
+            os.makedirs(full_path, exist_ok=True)
+            HTMLPlotter(fig, file_name)
+
+            print("Finished successful...")
+
+            if winMode: plt.close()
+            else: plt.show()
         
         return diameter
 
-    def circularity(self, img_path, isCircle=0.6, plot=False):
+    def circularity(self, img_path, winMode, isCircle=0.6, plot=False):
+
+        print("Computing circularity of the fruit")
+        
         image = cv2.imread(img_path)
 
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -169,7 +235,7 @@ class Utils(object):
                 is_circle = True
 
         if plot:
-            _, axes = plt.subplots(1, 4, figsize=(16, 8))
+            fig, axes = plt.subplots(1, 4, figsize=(16, 8))
 
             axes[0].imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
             axes[0].set_title("Original Image")
@@ -189,14 +255,29 @@ class Utils(object):
             axes[3].axis('off')
                 
             plt.tight_layout()
-            plt.show()
+            file_name = os.path.join(self.path, "output\circularity.html")
+            full_path = os.path.dirname(file_name)
+            os.makedirs(full_path, exist_ok=True)
+            HTMLPlotter(fig, file_name)
+
+            print("Finished successful...")
+
+            if winMode: plt.close()
+            else: plt.show()
         
         return circularity, is_circle
 
 
 if __name__ == '__main__':
-    utils = Utils()
-    utils.Tones('../dataset/fruta_verde/1_V.jpg', plot=True)
-    utils.colorIntensities('../dataset/fruta_verde/1_V.jpg', plot=True)
-    utils.diameter('../dataset/fruta_verde/1_V.jpg',plot=True)
-    utils.circularity('../dataset/fruta_verde/1_V.jpg', plot=True)
+    path,mode,image,winMode = loadConfig()
+    if path and mode != None:
+        utils = Utils()
+        utils.path = path
+        if mode == "Tone":
+            utils.Tones(image, winMode, plot=True)
+        elif mode == "Intensities":
+            utils.colorIntensities(image, winMode, plot=True)
+        elif mode == "Diameter":
+            utils.diameter(image, winMode, plot=True)
+        elif mode == "Circularity":
+            utils.circularity(image, winMode, plot=True)

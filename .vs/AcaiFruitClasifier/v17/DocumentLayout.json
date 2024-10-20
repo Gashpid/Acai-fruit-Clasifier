@@ -1,0 +1,103 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Asus\\source\\repos\\AcaiFruitClasifier\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{343067AD-3168-4D08-A1D3-A8FFD19DA440}|AcaiFruitClasifier.csproj|c:\\users\\asus\\source\\repos\\acaifruitclasifier\\systemsettingswindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{343067AD-3168-4D08-A1D3-A8FFD19DA440}|AcaiFruitClasifier.csproj|solutionrelative:systemsettingswindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{343067AD-3168-4D08-A1D3-A8FFD19DA440}|AcaiFruitClasifier.csproj|c:\\users\\asus\\source\\repos\\acaifruitclasifier\\yamlmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{343067AD-3168-4D08-A1D3-A8FFD19DA440}|AcaiFruitClasifier.csproj|solutionrelative:yamlmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{343067AD-3168-4D08-A1D3-A8FFD19DA440}|AcaiFruitClasifier.csproj|c:\\users\\asus\\source\\repos\\acaifruitclasifier\\systemsettingswindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{343067AD-3168-4D08-A1D3-A8FFD19DA440}|AcaiFruitClasifier.csproj|solutionrelative:systemsettingswindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{343067AD-3168-4D08-A1D3-A8FFD19DA440}|AcaiFruitClasifier.csproj|c:\\users\\asus\\source\\repos\\acaifruitclasifier\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{343067AD-3168-4D08-A1D3-A8FFD19DA440}|AcaiFruitClasifier.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{343067AD-3168-4D08-A1D3-A8FFD19DA440}|AcaiFruitClasifier.csproj|c:\\users\\asus\\source\\repos\\acaifruitclasifier\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{343067AD-3168-4D08-A1D3-A8FFD19DA440}|AcaiFruitClasifier.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "YamlManager.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\source\\repos\\AcaiFruitClasifier\\YamlManager.cs",
+              "RelativeDocumentMoniker": "YamlManager.cs",
+              "ToolTip": "C:\\Users\\Asus\\source\\repos\\AcaiFruitClasifier\\YamlManager.cs",
+              "RelativeToolTip": "YamlManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-20T16:40:06.223Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SystemSettingsWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\source\\repos\\AcaiFruitClasifier\\SystemSettingsWindow.xaml.cs",
+              "RelativeDocumentMoniker": "SystemSettingsWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\Asus\\source\\repos\\AcaiFruitClasifier\\SystemSettingsWindow.xaml.cs",
+              "RelativeToolTip": "SystemSettingsWindow.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-20T16:39:58.095Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SystemSettingsWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\Asus\\source\\repos\\AcaiFruitClasifier\\SystemSettingsWindow.xaml",
+              "RelativeDocumentMoniker": "SystemSettingsWindow.xaml",
+              "ToolTip": "C:\\Users\\Asus\\source\\repos\\AcaiFruitClasifier\\SystemSettingsWindow.xaml",
+              "RelativeToolTip": "SystemSettingsWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-10-20T16:39:48.186Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\Asus\\source\\repos\\AcaiFruitClasifier\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "MainWindow.xaml",
+              "ToolTip": "C:\\Users\\Asus\\source\\repos\\AcaiFruitClasifier\\MainWindow.xaml",
+              "RelativeToolTip": "MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-10-17T23:29:59.003Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\source\\repos\\AcaiFruitClasifier\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\Asus\\source\\repos\\AcaiFruitClasifier\\MainWindow.xaml.cs",
+              "RelativeToolTip": "MainWindow.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADYAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-17T23:29:54.376Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
